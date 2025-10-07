@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Far Labs - Decentralized AI Infrastructure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0a0e27 100%);
+            z-index: -3;
+        }
+
+        /* Grid animation */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #8a2be2, #00bcd4, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.3); }
+        }
+
+        .tagline {
+            font-size: 1.4em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            color: #00bcd4;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 188, 212, 0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            min-width: 150px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            margin-top: 10px;
+            opacity: 0.8;
+            color: #00bcd4;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(0, 188, 212, 0.05) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(138, 43, 226, 0.1) 50%,
+                transparent 70%
+            );
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(138, 43, 226, 0.5);
+            box-shadow:
+                0 10px 40px rgba(138, 43, 226, 0.3),
+                0 0 60px rgba(0, 188, 212, 0.1),
+                inset 0 0 20px rgba(138, 43, 226, 0.1);
+        }
+
+        .service-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.5));
+        }
+
+        .service-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #8a2be2, #00bcd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .service-desc {
+            opacity: 0.8;
+            line-height: 1.6;
+            color: #a0a0a0;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            margin: 10px;
+            background: linear-gradient(45deg, #8a2be2, #00bcd4, #ff0080, #00ff88, #8a2be2);
+            background-size: 400% 400%;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            animation: holo-shift 3s ease-in-out infinite;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        @keyframes holo-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #8a2be2, #00bcd4) 1;
+            animation: none;
+        }
+
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(138, 43, 226, 0.3);
+            border-top-color: #8a2be2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+
+    <div class="container">
+        <header>
+            <h1>🚀 FAR LABS</h1>
+            <p class="tagline">Decentralized AI Infrastructure Powered by Community GPUs</p>
+            <p style="opacity: 0.8; color: #00ff88;">Connect your GPU. Process AI tasks. Earn FAR tokens.</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="nodeCount">0</div>
+                <div class="stat-label">GPU Nodes Connected</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="inferenceCount">0</div>
+                <div class="stat-label">Inferences Processed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">$FAR</div>
+                <div class="stat-label">Token Symbol</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1M+</div>
+                <div class="stat-label">Total Supply</div>
+            </div>
+        </div>
+
+        <div class="services">
+            <div class="service-card">
+                <div class="service-icon">🤖</div>
+                <div class="service-title">AI Inference</div>
+                <div class="service-desc">Run LLMs, Stable Diffusion, and other AI models on distributed GPUs with lightning speed</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎮</div>
+                <div class="service-title">Gaming Hub</div>
+                <div class="service-desc">Play-to-earn games powered by blockchain and AI technology</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🔬</div>
+                <div class="service-title">DeSci Platform</div>
+                <div class="service-desc">Decentralized scientific computing and collaborative research</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <div class="service-title">GameD Engine</div>
+                <div class="service-desc">Gamification layer for Web3 applications and DAOs</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">👥</div>
+                <div class="service-title">FarTwin</div>
+                <div class="service-desc">Create and monetize AI digital twins and virtual assistants</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">💰</div>
+                <div class="service-title">Staking Rewards</div>
+                <div class="service-desc">Stake FAR tokens and earn passive income from network fees</div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <a href="http://54.145.42.136:8000/docs" class="btn">API Documentation</a>
+            <a href="#" class="btn btn-secondary" onclick="connectGPU()">Connect Your GPU</a>
+        </div>
+    </div>
+
+    <div class="api-status">
+        <div class="status-dot"></div>
+        <span id="apiStatus">API Online</span>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '2px';
+                particle.style.height = '2px';
+                particle.style.background = 'rgba(138, 43, 226, 0.6)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animation = `float ${10 + Math.random() * 20}s linear infinite`;
+                particle.style.boxShadow = '0 0 10px rgba(138, 43, 226, 0.5)';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Float animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                from { transform: translateY(0px) translateX(0px); }
+                to { transform: translateY(-100vh) translateX(50px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        createParticles();
+
+        // Animate counters
+        function animateCounter(id, target, duration = 2000) {
+            const element = document.getElementById(id);
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+
+        // Simulate live stats
+        setTimeout(() => {
+            animateCounter('nodeCount', 127);
+            animateCounter('inferenceCount', 42853);
+        }, 500);
+
+        function connectGPU() {
+            alert('To connect your GPU:\n\n1. Download the GPU node client\n2. Run: python gpu_node_client.py\n3. Enter your wallet address\n4. Start earning FAR tokens!\n\nAPI Endpoint: http://54.145.42.136:8000');
+        }
+
+        // Check API status
+        fetch('http://54.145.42.136:8000/health')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('apiStatus').textContent = 'API Online';
+                    document.querySelector('.status-dot').style.background = '#00ff00';
+                } else {
+                    document.getElementById('apiStatus').textContent = 'API Offline';
+                    document.querySelector('.status-dot').style.background = '#ff0000';
+                }
+            })
+            .catch(() => {
+                document.getElementById('apiStatus').textContent = 'API Connecting...';
+                document.querySelector('.status-dot').style.background = '#ffaa00';
+            });
+    </script>
+</body>
+</html>
