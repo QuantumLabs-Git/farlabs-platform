@@ -1,0 +1,32 @@
+{
+  "name": "farlabs-platform",
+  "version": "1.0.0",
+  "description": "Far Labs Web3 Platform - Decentralized AI Infrastructure",
+  "private": true,
+  "workspaces": [
+    "packages/frontend",
+    "packages/api-gateway",
+    "packages/websocket",
+    "packages/contracts",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "deploy": "turbo run deploy",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16",
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2",
+    "prettier": "^3.0.3",
+    "eslint": "^8.51.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

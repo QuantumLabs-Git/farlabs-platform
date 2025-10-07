@@ -1,0 +1,21 @@
+{
+  "name": "@farlabs/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network bsc",
+    "verify": "hardhat verify",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@chainlink/contracts": "^0.8.0",
+    "hardhat": "^2.19.0",
+    "ethers": "^6.9.0",
+    "chai": "^4.3.10",
+    "dotenv": "^16.3.1"
+  }
+}

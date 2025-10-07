@@ -1,0 +1,86 @@
+version: '3.9'
+
+# Minimal test deployment for AWS Free Tier
+services:
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=test
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:3001}
+      - NEXT_PUBLIC_BSC_RPC=${NEXT_PUBLIC_BSC_RPC:-https://data-seed-prebsc-1-s1.binance.org:8545/}
+    depends_on:
+      - inference
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+
+  # Inference Service (FastAPI)
+  inference:
+    build:
+      context: ./services/inference
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - BSC_RPC=${NEXT_PUBLIC_BSC_RPC:-https://data-seed-prebsc-1-s1.binance.org:8545/}
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:password@postgres:5432/farlabs}
+      - JWT_SECRET=${JWT_SECRET:-test-secret-key}
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+
+  # PostgreSQL (Local for test, use RDS in AWS)
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=farlabs
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    mem_limit: 256m
+    cpus: 0.25
+
+  # Redis (Local for test, consider ElastiCache for production)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.25
+
+  # Nginx (Simple reverse proxy)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.test.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - inference
+    restart: unless-stopped
+    mem_limit: 64m
+    cpus: 0.25
+
+volumes:
+  postgres_data:
+  redis_data:

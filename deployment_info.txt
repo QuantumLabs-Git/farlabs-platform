@@ -1,0 +1,57 @@
+========================================
+FAR LABS DEPLOYMENT INFORMATION
+========================================
+Deployment Date: October 7, 2025
+Environment: Test (AWS Free Tier)
+Status: Partially Deployed
+
+ACCESS URLS:
+-----------
+EC2 Instance IP: 54.145.42.136
+EC2 Instance DNS: ec2-54-145-42-136.compute-1.amazonaws.com
+
+Frontend URL: http://54.145.42.136:3000
+API URL: http://54.145.42.136:8000
+Health Check: http://54.145.42.136/health
+
+SSH ACCESS:
+----------
+ssh -i ~/.ssh/id_rsa ubuntu@54.145.42.136
+
+AWS RESOURCES CREATED:
+---------------------
+✅ VPC: vpc-0ebfcd538ea105c94
+✅ Internet Gateway: igw-04db72d8b36fa8823
+✅ Subnet (Public): subnet-0f2f6b740858ea514
+✅ Subnet (Secondary): subnet-0edf539545ce1a2fc
+✅ Route Table: rtb-0b2a25c32e37c0f3b
+✅ Security Group (Web): sg-0e3b2e468e22ba341
+✅ Security Group (RDS): sg-01120fc0cc0dbce04
+✅ EC2 Instance: i-072792f4e2cdff72b
+✅ S3 Bucket: farlabs-test-static-40d09ec1
+✅ CloudWatch Log Group: /aws/farlabs/test
+⏳ RDS Database: Being created...
+
+NEXT STEPS:
+----------
+1. Wait for RDS database to finish creating (5-10 minutes)
+2. SSH into EC2 instance to check Docker status
+3. Update environment variables with RDS endpoint
+4. Access the application URLs above
+
+TO CONNECT:
+----------
+ssh -i ~/.ssh/id_rsa ubuntu@54.145.42.136
+
+TO CHECK SERVICES:
+-----------------
+docker ps
+docker-compose logs -f
+
+TO DESTROY (IMPORTANT):
+----------------------
+cd infrastructure/terraform/environments/test
+terraform destroy -auto-approve
+
+ESTIMATED COST: $0/month (within AWS Free Tier)
+========================================

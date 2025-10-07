@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Far Labs - Decentralized AI Infrastructure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.4em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 50px 0;
+        }
+
+        .service-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .service-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .service-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .service-desc {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            margin: 10px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 FAR LABS</h1>
+            <p class="tagline">Decentralized AI Infrastructure Powered by Community GPUs</p>
+            <p style="opacity: 0.8;">Connect your GPU. Process AI tasks. Earn FAR tokens.</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="nodeCount">0</div>
+                <div class="stat-label">GPU Nodes Connected</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="inferenceCount">0</div>
+                <div class="stat-label">Inferences Processed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">$FAR</div>
+                <div class="stat-label">Token Symbol</div>
+            </div>
+        </div>
+
+        <div class="services">
+            <div class="service-card">
+                <div class="service-icon">🤖</div>
+                <div class="service-title">AI Inference</div>
+                <div class="service-desc">Run LLMs, Stable Diffusion, and other AI models on distributed GPUs</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎮</div>
+                <div class="service-title">Gaming Hub</div>
+                <div class="service-desc">Play-to-earn games powered by blockchain and AI</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🔬</div>
+                <div class="service-title">DeSci Platform</div>
+                <div class="service-desc">Decentralized scientific computing and research</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <div class="service-title">GameD Engine</div>
+                <div class="service-desc">Gamification layer for Web3 applications</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">👥</div>
+                <div class="service-title">FarTwin</div>
+                <div class="service-desc">Create and monetize AI digital twins</div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">💰</div>
+                <div class="service-title">Staking Rewards</div>
+                <div class="service-desc">Stake FAR tokens and earn passive income</div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <a href="http://54.145.42.136:8000/docs" class="btn">API Documentation</a>
+            <a href="#" class="btn btn-secondary" onclick="connectGPU()">Connect Your GPU</a>
+        </div>
+    </div>
+
+    <div class="api-status">
+        <div class="status-dot"></div>
+        <span id="apiStatus">API Online</span>
+    </div>
+
+    <script>
+        // Check API status
+        fetch('http://54.145.42.136:8000/health')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('apiStatus').textContent = 'API Online';
+                    document.querySelector('.status-dot').style.background = '#00ff00';
+                } else {
+                    document.getElementById('apiStatus').textContent = 'API Offline';
+                    document.querySelector('.status-dot').style.background = '#ff0000';
+                }
+            })
+            .catch(() => {
+                document.getElementById('apiStatus').textContent = 'API Offline';
+                document.querySelector('.status-dot').style.background = '#ff0000';
+            });
+
+        // Animate counters
+        function animateCounter(id, target, duration = 2000) {
+            const element = document.getElementById(id);
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 16);
+        }
+
+        // Simulate live stats
+        setTimeout(() => {
+            animateCounter('nodeCount', 3);
+            animateCounter('inferenceCount', 127);
+        }, 500);
+
+        function connectGPU() {
+            alert('To connect your GPU:\\n\\n1. Download the GPU node client\\n2. Run: python gpu_node_client.py\\n3. Enter your wallet address\\n4. Start earning FAR tokens!\\n\\nAPI Endpoint: http://54.145.42.136:8000');
+        }
+    </script>
+</body>
+</html>
