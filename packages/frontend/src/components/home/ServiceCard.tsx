@@ -13,7 +13,7 @@ interface ServiceCardProps {
     href: string
     gradient: string
     stats: {
-      [key: string]: string
+      [key: string]: string | undefined
     }
   }
   index: number
@@ -87,12 +87,14 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
 
             {/* Stats */}
             <div className="flex gap-4 mb-4">
-              {Object.entries(service.stats).map(([key, value]) => (
-                <div key={key} className="text-sm">
-                  <div className="text-primary-400 font-semibold">{value}</div>
-                  <div className="text-dark-text capitalize">{key}</div>
-                </div>
-              ))}
+              {Object.entries(service.stats)
+                .filter(([_, value]) => value !== undefined)
+                .map(([key, value]) => (
+                  <div key={key} className="text-sm">
+                    <div className="text-primary-400 font-semibold">{value}</div>
+                    <div className="text-dark-text capitalize">{key}</div>
+                  </div>
+                ))}
             </div>
 
             <div className="flex items-center text-primary-400 font-semibold
