@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Inference - Far Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0A0A0A;
+            --surface-1: #111111;
+            --surface-2: #1A1A1A;
+            --border: #222222;
+            --border-light: #333333;
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #10B981 100%);
+            --gradient-secondary: linear-gradient(135deg, #9333EA 0%, #34D399 100%);
+            --gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            --purple: #7C3AED;
+            --purple-light: #A78BFA;
+            --green: #10B981;
+            --green-light: #34D399;
+            --text-primary: #FFFFFF;
+            --text-secondary: #888888;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .wallet-btn {
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Action Cards */
+        .action-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .action-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--purple);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.2);
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-subtle);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-button:hover {
+            transform: translateX(5px);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Model Selection */
+        .models-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .model-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .model-card:hover {
+            border-color: var(--purple);
+            transform: translateY(-3px);
+        }
+
+        .model-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .model-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .model-size {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .model-price {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* Pricing Table */
+        .pricing-section {
+            background: var(--surface-1);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .pricing-table th {
+            background: var(--gradient-subtle);
+            padding: 1rem;
+            text-align: left;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .pricing-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .pricing-highlight {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* API Key Section */
+        .api-section {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .api-key-display {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .api-key-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="simple-frontend.html" class="logo">FAR LABS</a>
+            <ul class="nav-links">
+                <li><a href="simple-frontend.html">Home</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="http://54.145.42.136:8000/docs">API Docs</a></li>
+            </ul>
+            <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>AI Inference Platform</h1>
+        <p>Choose your role: Contribute GPU power, purchase tokens, or start using AI models</p>
+    </section>
+
+    <!-- Action Cards -->
+    <section class="action-grid">
+        <div class="action-card" onclick="window.location.href='gpu-provider.html'">
+            <div class="action-icon">⚡</div>
+            <h2 class="action-title">Become a GPU Provider</h2>
+            <p class="action-description">Contribute your idle GPU power to the network and earn FAR tokens. Simple setup with Docker or native installation.</p>
+            <a href="gpu-provider.html" class="action-button">Start Earning →</a>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='buy-tokens.html'">
+            <div class="action-icon">💰</div>
+            <h2 class="action-title">Buy FAR Tokens</h2>
+            <p class="action-description">Purchase FAR tokens to access AI inference services. Multiple payment methods including credit card and crypto.</p>
+            <a href="buy-tokens.html" class="action-button">Buy Tokens →</a>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='api-playground.html'">
+            <div class="action-icon">🚀</div>
+            <h2 class="action-title">Use AI Models</h2>
+            <p class="action-description">Start using state-of-the-art AI models immediately. OpenAI-compatible API with 90% cost savings.</p>
+            <a href="api-playground.html" class="action-button">Try It Now →</a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value" id="activeNodes">127</div>
+                <div class="stat-label">Active GPU Nodes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="modelsAvailable">24</div>
+                <div class="stat-label">Models Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="tokensPerM">$0.50</div>
+                <div class="stat-label">Per 1M Tokens</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgLatency">320ms</div>
+                <div class="stat-label">Avg Latency</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalInferences">42.8K</div>
+                <div class="stat-label">Total Inferences</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Available Models -->
+    <section class="models-section" id="models">
+        <h2 class="section-title">Available Models</h2>
+        <div class="models-grid">
+            <div class="model-card">
+                <h3 class="model-name">Llama 3.1 405B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Flagship model competing with GPT-4</p>
+                <div class="model-info">
+                    <span class="model-size">405B params</span>
+                    <span class="model-price">$5.00/1M tokens</span>
+                </div>
+            </div>
+            <div class="model-card">
+                <h3 class="model-name">Llama 3.1 70B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Best performance/cost ratio</p>
+                <div class="model-info">
+                    <span class="model-size">70B params</span>
+                    <span class="model-price">$1.50/1M tokens</span>
+                </div>
+            </div>
+            <div class="model-card">
+                <h3 class="model-name">Mixtral 8x22B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">MoE architecture for efficiency</p>
+                <div class="model-info">
+                    <span class="model-size">176B params</span>
+                    <span class="model-price">$3.00/1M tokens</span>
+                </div>
+            </div>
+            <div class="model-card">
+                <h3 class="model-name">Mistral 7B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Best small model for speed</p>
+                <div class="model-info">
+                    <span class="model-size">7B params</span>
+                    <span class="model-price">$0.10/1M tokens</span>
+                </div>
+            </div>
+            <div class="model-card">
+                <h3 class="model-name">Codestral 22B</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Specialized for code generation</p>
+                <div class="model-info">
+                    <span class="model-size">22B params</span>
+                    <span class="model-price">$0.80/1M tokens</span>
+                </div>
+            </div>
+            <div class="model-card">
+                <h3 class="model-name">DeepSeek Coder V2</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Premier coding model</p>
+                <div class="model-info">
+                    <span class="model-size">236B params</span>
+                    <span class="model-price">$4.00/1M tokens</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Comparison -->
+    <section class="pricing-section" id="pricing">
+        <h2 class="section-title">Pricing Comparison</h2>
+        <table class="pricing-table">
+            <thead>
+                <tr>
+                    <th>Model Type</th>
+                    <th>OpenAI/Anthropic</th>
+                    <th>Far Labs</th>
+                    <th>Your Savings</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Small (7B)</td>
+                    <td>$3-6 / 1M tokens</td>
+                    <td class="pricing-highlight">$0.10-0.50 / 1M tokens</td>
+                    <td class="pricing-highlight">90-95%</td>
+                </tr>
+                <tr>
+                    <td>Medium (70B)</td>
+                    <td>$15-30 / 1M tokens</td>
+                    <td class="pricing-highlight">$1-3 / 1M tokens</td>
+                    <td class="pricing-highlight">85-90%</td>
+                </tr>
+                <tr>
+                    <td>Large (180B+)</td>
+                    <td>$60-150 / 1M tokens</td>
+                    <td class="pricing-highlight">$5-15 / 1M tokens</td>
+                    <td class="pricing-highlight">75-90%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Quick Start API -->
+    <section class="api-section">
+        <h2 class="section-title">Quick Start</h2>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+            Get started in minutes with our OpenAI-compatible API
+        </p>
+
+        <div class="code-block">
+            <pre>from farlabs import InferenceClient
+
+client = InferenceClient(api_key="your_api_key_here")
+
+response = client.generate(
+    prompt="Explain quantum computing",
+    model="llama-70b",
+    max_tokens=500
+)
+
+print(response)</pre>
+        </div>
+
+        <div class="api-key-display">
+            <span class="api-key-text" id="apiKey">far_sk_1234567890abcdef...</span>
+            <button class="copy-btn" onclick="copyApiKey()">Copy</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Far Labs. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Connect Wallet
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    document.querySelector('.wallet-btn').textContent = accounts[0].substring(0, 6) + '...' + accounts[0].substring(38);
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                }
+            } else {
+                alert('Please install MetaMask or another Web3 wallet');
+            }
+        }
+
+        // Copy API Key
+        function copyApiKey() {
+            const apiKey = document.getElementById('apiKey').textContent;
+            navigator.clipboard.writeText(apiKey);
+            const btn = event.target;
+            btn.textContent = 'Copied!';
+            setTimeout(() => {
+                btn.textContent = 'Copy';
+            }, 2000);
+        }
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Animate the stat values
+                    entry.target.style.animation = 'fadeInUp 0.5s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

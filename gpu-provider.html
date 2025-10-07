@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Provider - Far Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0A0A0A;
+            --surface-1: #111111;
+            --surface-2: #1A1A1A;
+            --border: #222222;
+            --border-light: #333333;
+            --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #10B981 100%);
+            --gradient-secondary: linear-gradient(135deg, #9333EA 0%, #34D399 100%);
+            --gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            --purple: #7C3AED;
+            --purple-light: #A78BFA;
+            --green: #10B981;
+            --green-light: #34D399;
+            --text-primary: #FFFFFF;
+            --text-secondary: #888888;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+        }
+
+        /* Earnings Calculator */
+        .earnings-calculator {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .calc-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .calc-input {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calc-input label {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .calc-input select,
+        .calc-input input {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .earnings-result {
+            background: var(--gradient-subtle);
+            border: 1px solid var(--purple);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .earnings-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .earnings-period {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Setup Steps */
+        .setup-section {
+            margin-bottom: 3rem;
+        }
+
+        .setup-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .setup-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+        }
+
+        .setup-content {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .step {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-left: 3rem;
+        }
+
+        .code-block {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0 1rem 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Requirements */
+        .requirements {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .req-card {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .req-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .req-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .req-value {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* CTA Button */
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-1);
+            border-color: var(--purple);
+        }
+
+        /* Support Section */
+        .support-section {
+            background: var(--gradient-subtle);
+            border: 1px solid var(--purple);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-tabs {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="simple-frontend.html" class="logo">FAR LABS</a>
+            <ul class="nav-links">
+                <li><a href="simple-frontend.html">Home</a></li>
+                <li><a href="ai-inference.html">AI Inference</a></li>
+                <li><a href="buy-tokens.html">Buy Tokens</a></li>
+                <li><a href="http://54.145.42.136:8000/docs">API Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Become a GPU Provider</h1>
+            <p>Turn your idle GPU into a passive income stream</p>
+        </div>
+
+        <!-- Earnings Calculator -->
+        <div class="earnings-calculator">
+            <h2 class="calc-title">💰 Earnings Calculator</h2>
+            <div class="calc-grid">
+                <div class="calc-input">
+                    <label>GPU Model</label>
+                    <select id="gpuModel" onchange="calculateEarnings()">
+                        <option value="4090">RTX 4090</option>
+                        <option value="4080">RTX 4080</option>
+                        <option value="3090">RTX 3090</option>
+                        <option value="3080">RTX 3080</option>
+                        <option value="a100">A100 80GB</option>
+                        <option value="h100">H100 80GB</option>
+                    </select>
+                </div>
+                <div class="calc-input">
+                    <label>Hours per Day</label>
+                    <input type="number" id="hoursPerDay" value="24" min="1" max="24" onchange="calculateEarnings()">
+                </div>
+                <div class="calc-input">
+                    <label>Uptime %</label>
+                    <input type="number" id="uptime" value="95" min="50" max="100" onchange="calculateEarnings()">
+                </div>
+            </div>
+            <div class="earnings-result">
+                <div class="earnings-amount" id="monthlyEarnings">$850</div>
+                <div class="earnings-period">Estimated Monthly Earnings</div>
+            </div>
+        </div>
+
+        <!-- Minimum Requirements -->
+        <div class="requirements">
+            <h2 class="calc-title">📋 Minimum Requirements</h2>
+            <div class="req-grid">
+                <div class="req-card">
+                    <div class="req-icon">🖥️</div>
+                    <div class="req-title">GPU Memory</div>
+                    <div class="req-value">8GB+ VRAM</div>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">💾</div>
+                    <div class="req-title">System RAM</div>
+                    <div class="req-value">16GB+ RAM</div>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">🌐</div>
+                    <div class="req-title">Internet</div>
+                    <div class="req-value">50 Mbps+</div>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">💿</div>
+                    <div class="req-title">Storage</div>
+                    <div class="req-value">100GB+ SSD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Steps -->
+        <div class="setup-section">
+            <h2 class="setup-title">🚀 Quick Setup Guide</h2>
+
+            <div class="setup-tabs">
+                <button class="tab-btn active" onclick="showSetup('docker')">Docker (Recommended)</button>
+                <button class="tab-btn" onclick="showSetup('native')">Native Installation</button>
+                <button class="tab-btn" onclick="showSetup('windows')">Windows</button>
+            </div>
+
+            <div class="setup-content" id="docker-setup">
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Install Docker
+                    </div>
+                    <p class="step-description">
+                        Download and install Docker Desktop from docker.com
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Pull Far Labs GPU Node Image
+                    </div>
+                    <div class="code-block">
+                        <pre>docker pull farlabs/gpu-node:latest</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Run the Node with Your Wallet
+                    </div>
+                    <div class="code-block">
+                        <pre>docker run -d \
+  --gpus all \
+  --name farlabs-node \
+  -e WALLET_ADDRESS=0xYourWalletAddress \
+  -e NODE_NAME=MyGPUNode \
+  -p 8080:8080 \
+  farlabs/gpu-node:latest</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Verify Node Status
+                    </div>
+                    <div class="code-block">
+                        <pre>docker logs farlabs-node
+# You should see: "Node connected to Far Labs network"
+# Visit http://localhost:8080 to see your node dashboard</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-content" id="native-setup" style="display: none;">
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Install Python 3.9+
+                    </div>
+                    <div class="code-block">
+                        <pre>python --version  # Should be 3.9 or higher</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Install CUDA Toolkit
+                    </div>
+                    <p class="step-description">
+                        Download CUDA 11.8+ from nvidia.com/cuda-downloads
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Install Far Labs Client
+                    </div>
+                    <div class="code-block">
+                        <pre>pip install farlabs-gpu-node
+farlabs-node init</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Configure and Start
+                    </div>
+                    <div class="code-block">
+                        <pre>farlabs-node config --wallet 0xYourWalletAddress
+farlabs-node start --name MyGPUNode</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-content" id="windows-setup" style="display: none;">
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Download Windows Installer
+                    </div>
+                    <p class="step-description">
+                        Download FarLabsNode-Setup.exe from our releases page
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Run the Installer
+                    </div>
+                    <p class="step-description">
+                        Double-click the installer and follow the setup wizard
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Enter Your Wallet Address
+                    </div>
+                    <p class="step-description">
+                        Launch Far Labs Node from your desktop and enter your BSC wallet address
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Start Earning
+                    </div>
+                    <p class="step-description">
+                        Click "Start Node" and minimize to system tray. Your GPU is now earning!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Configuration -->
+        <div class="setup-section">
+            <h2 class="setup-title">⚙️ Advanced Configuration</h2>
+            <div class="setup-content">
+                <div class="step">
+                    <div class="step-title">Environment Variables</div>
+                    <div class="code-block">
+                        <pre># Performance Tuning
+FARLABS_MAX_BATCH_SIZE=32
+FARLABS_MAX_MEMORY_USAGE=0.9
+FARLABS_CACHE_SIZE=10GB
+
+# Network Settings
+FARLABS_PORT=8080
+FARLABS_PUBLIC_IP=auto
+
+# Monitoring
+FARLABS_METRICS_ENABLED=true
+FARLABS_LOG_LEVEL=info</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="support-section">
+            <h2 style="color: var(--text-primary); margin-bottom: 1rem;">Need Help?</h2>
+            <p style="margin-bottom: 2rem;">Join our Discord community for 24/7 support</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="#" class="btn-primary">Join Discord</a>
+                <a href="http://54.145.42.136:8000/docs" class="btn-secondary">Read Docs</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate Earnings
+        function calculateEarnings() {
+            const gpuModel = document.getElementById('gpuModel').value;
+            const hoursPerDay = parseFloat(document.getElementById('hoursPerDay').value);
+            const uptime = parseFloat(document.getElementById('uptime').value) / 100;
+
+            // Base earnings per hour by GPU model
+            const earningsPerHour = {
+                '4090': 1.5,
+                '4080': 1.2,
+                '3090': 1.0,
+                '3080': 0.8,
+                'a100': 3.5,
+                'h100': 5.0
+            };
+
+            const baseEarning = earningsPerHour[gpuModel] || 1.0;
+            const dailyEarning = baseEarning * hoursPerDay * uptime;
+            const monthlyEarning = dailyEarning * 30;
+
+            document.getElementById('monthlyEarnings').textContent = `$${monthlyEarning.toFixed(0)}`;
+        }
+
+        // Tab Switching
+        function showSetup(type) {
+            // Hide all setups
+            document.getElementById('docker-setup').style.display = 'none';
+            document.getElementById('native-setup').style.display = 'none';
+            document.getElementById('windows-setup').style.display = 'none';
+
+            // Show selected setup
+            document.getElementById(`${type}-setup`).style.display = 'block';
+
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Initialize
+        calculateEarnings();
+    </script>
+</body>
+</html>
